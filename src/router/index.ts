@@ -9,8 +9,12 @@ export class Router {
         this.routes = [];
     }
 
-    matchRoute(prefix: string, isDefaultPage?: boolean): (location: Location) => boolean {
-        this.routes.push(prefix);
+    matchRoute(prefix: any, isDefaultPage?: boolean): (location: Location) => boolean {
+        if (prefix.prop && prefix.prop.constructor === Array) {
+            Array.prototype.push.apply(this.routes, prefix);
+        } else {
+            this.routes.push(prefix);
+        }
         if (isDefaultPage) {
             this.defaultRoute = prefix;
         }
