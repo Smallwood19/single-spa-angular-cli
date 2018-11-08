@@ -9,11 +9,13 @@ export class Router {
         this.routes = [];
     }
 
-    matchRoute(prefix: any, isDefaultPage?: boolean): (location: Location) => boolean {
-        if (prefix.prop && prefix.prop.constructor === Array) {
+    matchRoute(prefix: any, isDefaultPage?: boolean): (location: Location, console: Console) => boolean {
+        if (Array.isArray(prefix)) {
             Array.prototype.push.apply(this.routes, prefix);
+            console.info("Push Array", prefix, this.routes);
         } else {
             this.routes.push(prefix);
+            console.info("Push String", prefix, this.routes);
         }
         if (isDefaultPage) {
             this.defaultRoute = prefix;
@@ -36,9 +38,20 @@ export class Router {
         history.pushState(null, null, path);
     }
 
-    private pathMatch(location: Location, path: string): boolean {
+    private pathMatch(location: Location, path: any): boolean {
         const loc = location.pathname + location.search;
-        return loc.indexOf(path) !== -1;
+        if (Array.isArray(path)) {
+            for (const p in path) {
+                if (loc.indexOf(p) !== -1) {
+                    return true;
+                }
+            }
+        }
+        else {
+            return loc.indexOf(path) !== -1;
+        }
+
+        return false;
     }
 
 }
