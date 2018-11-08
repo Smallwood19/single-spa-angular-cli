@@ -39,16 +39,24 @@ export class Router {
     }
 
     private pathMatch(location: Location, path: any): boolean {
-        const loc = location.pathname + location.search;
         if (Array.isArray(path)) {
             for (const p in path) {
-                if (loc.indexOf(p) !== -1) {
+                if (location.pathname.indexOf(p) === 0) {
+                    return true;
+                }
+                if (location.search.indexOf(p) === 1) {
                     return true;
                 }
             }
         }
         else {
-            return loc.indexOf(path) !== -1;
+            if (location.pathname.indexOf(path) === 0) {
+                return true;
+            }
+            if (location.search.indexOf(path) === 1) {
+                return true;
+            }
+            return false;
         }
 
         return false;
